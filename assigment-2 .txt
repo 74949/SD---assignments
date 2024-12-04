@@ -1,0 +1,98 @@
+Problem 1: Domain Constraints
+a. CREATE TABLE Statement for the Students table:
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Age INT CHECK (Age BETWEEN 18 AND 25),
+    Grade DECIMAL CHECK (Grade BETWEEN 0.0 AND 10.0)
+);
+b. Inserting Records (one violating Age constraint and one violating Grade constraint):
+-- Violating Age constraint (Age is less than 18)
+INSERT INTO Students (StudentID, Name, Age, Grade)
+VALUES (1, 'John Doe', 17, 9.0);
+
+-- Violating Grade constraint (Grade is greater than 10.0)
+INSERT INTO Students (StudentID, Name, Age, Grade)
+VALUES (2, 'Jane Smith', 22, 11.0);
+
+Problem 2: Entity Integrity Constraints
+a. CREATE TABLE Statement for the Courses table:
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(100),
+    Credits INT NOT NULL
+);
+b. Inserting a record without specifying the CourseID:
+INSERT INTO Courses (CourseName, Credits)
+VALUES ('Database Systems', 3);
+
+Problem 3: Referential Integrity Constraints
+a. CREATE TABLE Statements for Products and Orders:
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100)
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    ProductID INT,
+    OrderQuantity INT,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+b. Inserting a record into Orders with a ProductID that does not exist in Products:
+INSERT INTO Orders (OrderID, ProductID, OrderQuantity)
+VALUES (1, 100, 5);
+c. Inserting Valid Records into both Tables:
+-- Insert into Products
+INSERT INTO Products (ProductID, ProductName)
+VALUES (1, 'Laptop');
+
+-- Insert into Orders with valid ProductID
+INSERT INTO Orders (OrderID, ProductID, OrderQuantity)
+VALUES (1, 1, 5);
+
+Problem 4: Key Constraints
+a. CREATE TABLE Statement for the Employees table:
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    Email VARCHAR(100) UNIQUE,
+    Name VARCHAR(50)
+);
+b. Inserting two employees with the same Email:
+-- First insert
+INSERT INTO Employees (EmployeeID, Email, Name)
+VALUES (1, 'john.doe@example.com', 'John Doe');
+
+-- Second insert (duplicate email)
+INSERT INTO Employees (EmployeeID, Email, Name)
+VALUES (2, 'john.doe@example.com', 'Jane Doe');
+c. Inserting a record without specifying an email:
+INSERT INTO Employees (EmployeeID, Name)
+VALUES (3, 'Alice Johnson');
+
+
+Problem 5: Combination of Constraints
+a. CREATE TABLE Statements for Accounts and Transactions:
+CREATE TABLE Accounts (
+    AccountID INT PRIMARY KEY,
+    MobileNumber VARCHAR(10) CHECK (LEN(MobileNumber) = 10),
+    Balance DECIMAL(10, 2) CHECK (Balance >= 0)
+);
+
+CREATE TABLE Transactions (
+    TransactionID INT PRIMARY KEY,
+    AccountID INT,
+    TransactionAmount DECIMAL CHECK (TransactionAmount != 0),
+    FOREIGN KEY (AccountID) REFERENCES Accounts(AccountID)
+);
+b. Inserting a transaction for an account that does not exist:
+INSERT INTO Transactions (TransactionID, AccountID, TransactionAmount)
+VALUES (1, 100, 50.0);
+c. Inserting valid records into both tables:
+-- Insert into Accounts
+INSERT INTO Accounts (AccountID, MobileNumber, Balance)
+VALUES (1, '1234567890', 500.00);
+
+-- Insert into Transactions with valid AccountID
+INSERT INTO Transactions (TransactionID, AccountID, TransactionAmount)
+VALUES (1, 1, 50.00);
